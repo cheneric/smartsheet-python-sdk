@@ -984,10 +984,14 @@ class Sheet(AttachPoint, TopLevelThing, object):
         @raises SmartsheetClientError
         '''
         self.errorIfDiscarded()
-        path = '/sheet/{sheetId}/column/{columnId}'.format(sheetId=self.id, columnId=column.id)
-        name = '{sheet}.updateColumnn({columnId})'.format(sheet=self, columnId=column.id)
-        body = self.client.PUT(path, name=name, extra_headers=self.client.json_headers, body=json.dumps(column.flattenForUpdate()))
-        self.logger.debug('{sheet}.updateColumn() refreshing columns_info'.format(sheet=self))
+        path = '/sheet/{sheetId}/column/{columnId}'.format(
+                sheetId=self.id, columnId=column.id)
+        name = '{sheet}.updateColumnn({columnId})'.format(
+                sheet=self, columnId=column.id)
+        body = self.client.PUT(path, name=name,
+                extra_headers=self.client.json_headers,
+                body=json.dumps(column.flattenForUpdate()))
+        self.logger.debug('%s.updateColumn() refreshing columns_info', self)
         self.refreshColumnsInfo()
 
     def refetch(self):

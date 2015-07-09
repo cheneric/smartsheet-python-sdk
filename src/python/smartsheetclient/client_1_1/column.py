@@ -21,9 +21,6 @@ class Column(ContainedThing, object):
     Track the details, but not data, of a column in a Sheet.
     Many of the fields are optional.
     '''
-    # TODO:  Make the Column type immutable.
-    # Along with that, provide a mechanism to change the attributes that
-    # can be changed.
     # TODO:  Should the Column know the URL path to change itself?
     # I think probably so.
     field_names = '''id index title primary type options hidden symbol
@@ -204,7 +201,7 @@ class Column(ContainedThing, object):
         '''
         self.errorIfDiscarded()
         acc = {'title': self.title, 'type': self.type }
-        if self.index > 0:
+        if self.index >= 0:
             acc['index'] = self.index
         if self.primary:
             acc['primary'] = True
@@ -238,11 +235,12 @@ class Column(ContainedThing, object):
     def flattenForUpdate(self):
         '''
         Return a dict of Column attributes suitable for update.
-        Notably, this dict contains the Sheet ID and omits the 'primary' attribute.
+        Notably, this dict contains the Sheet ID and omits the 'primary'
+        attribute.
         '''
         self.errorIfDiscarded()
         acc = self.flatten()
-        if self.sheet and self.sheet.id is not None:
+        if self.sheet is not None and self.sheet.id is not None:
             acc['sheetId'] = self.sheet.id
         if 'primary' in acc:
             del acc['primary']
